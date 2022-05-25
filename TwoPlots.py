@@ -13,6 +13,8 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
+#%% This is the Quick and dirty Part (I know)
+
 POP_GER =  83240000
 POP_GRE =  10720000
 POP_NOR =   5379000
@@ -40,8 +42,6 @@ print("Error : " + str(error))
 print("out : " + str(out))
 
 '''
-#%% Fixed Population data
-
 
 
 #%%   Import csv in Pandas Dataframe
@@ -49,6 +49,11 @@ print("out : " + str(out))
 data_path='./COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv'
 pd_raw=pd.read_csv(data_path)
 pd_raw.head()
+
+
+data_path='./owid-covid-data.csv'
+vac=pd.read_csv(data_path)
+vac.head()
 
 #%% Do some Data preprocessing
 #I want to drop everything that is not 
@@ -73,13 +78,41 @@ def calculate_relative_NOR(row):
 
 df["Norway"] = df["Norway"].apply( calculate_relative_NOR )
 
+#%%
+
+#Different type of Dataset - Could not find Vaccination Rate in the given DataSet
+#Used Dataset can be found in Git Repo
+#Source of Data: https://ourworldindata.org/covid-vaccinations
+
+df_vac_ger = vac.loc[vac['location'] == 'Germany']
+df_vac_gre = vac.loc[vac['location'] == 'Greece']
+df_vac_nor = vac.loc[vac['location'] == 'Norway']
+
+df_vac_ger.index = df_vac_ger["date"]
+df_vac_gre.index = df_vac_gre["date"] 
+df_vac_nor.index = df_vac_nor["date"]
+
+df_vac_ger = df_vac_ger["people_fully_vaccinated_per_hundred"]
+df_vac_gre = df_vac_gre["people_fully_vaccinated_per_hundred"]
+df_vac_nor = df_vac_nor["people_fully_vaccinated_per_hundred"]
+
+df = pd.concat([df_vac_ger, df_vac_gre,df_vac_nor], axis=1)
+df.columns = ["Germany","Greece","Norway"]
+
+
 
 #%%Plot Data in Plotly
 
 import plotly.express as px
 
-fig = px.line(df[["Germany","Greece","Norway"]], labels={"index":"time", 
+fig1 = px.line(df[["Germany","Greece","Norway"]], labels={"index":"time", 
                               "value":"Relative number of cases"},
                                   title="Covid Cases" , template="plotly_dark")
 
-fig.write_html("Covid_Ger_Gre_Nor.html")
+fig1.write_html("Covid_Ger_Gre_Nor.html")
+
+fig2 = px.line(df[["Germany","Greece","Norway"]], labels={"index":"time", 
+                              "value":"Percantage of fully vaccinated People"},
+                                  title="Vaccination Rate" , template="plotly_dark")
+
+fig2.write_html("Vacc_Ger_Gre_Nor.html")
