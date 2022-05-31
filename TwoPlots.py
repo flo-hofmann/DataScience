@@ -51,8 +51,8 @@ pd_raw=pd.read_csv(data_path)
 pd_raw.head()
 
 
-data_path='./owid-covid-data.csv'
-vac=pd.read_csv(data_path)
+data_path_2='./owid-covid-data.csv'
+vac=pd.read_csv(data_path_2)
 vac.head()
 
 #%% Do some Data preprocessing
@@ -96,8 +96,8 @@ df_vac_ger = df_vac_ger["people_fully_vaccinated_per_hundred"]
 df_vac_gre = df_vac_gre["people_fully_vaccinated_per_hundred"]
 df_vac_nor = df_vac_nor["people_fully_vaccinated_per_hundred"]
 
-df = pd.concat([df_vac_ger, df_vac_gre,df_vac_nor], axis=1)
-df.columns = ["Germany","Greece","Norway"]
+df2 = pd.concat([df_vac_ger, df_vac_gre,df_vac_nor], axis=1)
+df2.columns = ["Germany","Greece","Norway"]
 
 
 
@@ -111,7 +111,7 @@ fig1 = px.line(df[["Germany","Greece","Norway"]], labels={"index":"time",
 
 fig1.write_html("Covid_Ger_Gre_Nor.html")
 
-fig2 = px.line(df[["Germany","Greece","Norway"]], labels={"index":"time", 
+fig2 = px.line(df2[["Germany","Greece","Norway"]], labels={"index":"time", 
                               "value":"Percantage of fully vaccinated People"},
                                   title="Vaccination Rate" , template="plotly_dark")
 
