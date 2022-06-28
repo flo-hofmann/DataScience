@@ -104,6 +104,7 @@ df2.columns = ["Germany","Greece","Norway"]
 #%%Plot Data in Plotly
 
 import plotly.express as px
+import kaleido
 
 fig1 = px.line(df[["Germany","Greece","Norway"]], labels={"index":"time", 
                               "value":"Relative number of cases"},
@@ -116,3 +117,26 @@ fig2 = px.line(df2[["Germany","Greece","Norway"]], labels={"index":"time",
                                   title="Vaccination Rate" , template="plotly_dark")
 
 fig2.write_html("Vacc_Ger_Gre_Nor.html")
+
+fig1.write_image("Covid_Ger_Gre_Nor.png")
+fig2.write_image("Vacc_Ger_Gre_Nor.png")
+
+#%%Plot Data in Matplotlib
+import matplotlib.pyplot as plt 
+'''
+
+plt.style.use("dark_background")
+plt.plot(df2["Germany"], color="r", label="Germany")
+plt.plot(df2["Greece"], color="b", label="Greece")
+plt.plot(df2["Norway"], color="white", label="Norway")
+plt.title("Relative Covid Cases")
+plt.xlabel("Percentage")
+plt.ylabel("Time")
+plt.legend( )
+plt.xticks(1000, "Germany")
+plt.tight_layout();
+#plt.savefig("Data.png", dpi=300, bbox_inches="tight")
+plt.show()
+
+'''
+
